@@ -13,15 +13,17 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
 
- config.vm.define :node1 do |node|                       
-   node.vm.box = "centos7.2"                              
-   node.vm.network :private_network, ip: "192.168.33.11" 
- end                                                     
-                                                         
- config.vm.define :node2 do |node|                       
-   node.vm.box = "centos7.2"                              
-   node.vm.network :private_network, ip: "192.168.33.12" 
- end
+  config.vm.define :node1 do |node|
+    node.vm.box = "centos7.2"
+    node.vm.network :private_network, ip: "192.168.33.11"
+    config.ssh.insert_key = false
+  end
+ 
+  config.vm.define :node2 do |node|
+    node.vm.box = "centos7.2"
+    node.vm.network :private_network, ip: "192.168.33.12"
+    config.ssh.insert_key = false
+  end
 
   # config.vm.define "target" do |config|
   #    config.vm.box = "centos7.2"
