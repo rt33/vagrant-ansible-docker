@@ -1,0 +1,65 @@
+- hosts: servers
+  sudo: true
+  user: vagrant
+  tasks:
+    - name: set timezone to Asia/Tokyo
+      file: src=/usr/share/zoneinfo/Asia/Tokyo  dest=/etc/localtime state=link force=yes
+
+    # nginx
+    - name: Install nginx repository
+      yum: name=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm state=present
+
+    # Rubyの依存パッケージをinstall
+    - yum: name={{item}} state=latest
+      with_items:
+        - gcc
+        - zlib-devel
+        - mariadb-server
+        - openssl-devel
+        - libffi-devel
+        - libxml2-devel
+        - libxslt-devel
+        - httpd-devel
+        - curl-devel
+        - apr-devel
+        - apr-util-devel
+        - readline-devel
+        - ImageMagick
+        - ImageMagick-devel
+        - mysql-devel
+        - zsh
+        - nginx
+    
+    # Zsh 設定
+    - name: set zsh as default shell for vagrant user
+      command: chsh -s '/bin/zsh' vagrant
+    - name: copy .zsh file to vagrant home
+      copy: src=~/ansible/zshrc_centos dest=~vagrant/.zshrc owner=vagrant group=vagrant mode="u=rw,g=r,o=r"
+
+    # Git install
+    - yum: name=git state=latest
+
+    # Rubyをrbenv経由でinstall
+    - git: >
+        repo=https://github.com/sstephenson/rbenv.git
+        dest=/home/vagrant/.rbenv/
+    - git: >
+        repo=https://github.com/sstephenson/ruby-build.git
+        dest=/home/vagrant/.rbenv/plugins/ruby-build/
+    - file: path=/home/vagrant/.rbenv owner=vagrant state=directory recurse=yes
+
+    - shell: echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.zshrc
+      sudo: no
+    - shell: echo 'export PATH="$HOME/.rbenv/shims:$PATH"' >> ~/.zshrc
+      sudo: no
+    - shell: echo 'eval "$(rbenv init -)"' >> ~/.zshrc
+      sudo: no
+
+    - shell: zsh -lc "rbenv install -v 2.3.1"
+      sudo: no
+    - shell: zsh -lc "rbenv rehash"
+      sudo: no
+    - shell: zsh -lc "rbenv global 2.3.1"
+      sudo: no
+    - shell: zsh -lc "gem install bundler"
+      sudo: no

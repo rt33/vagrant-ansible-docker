@@ -16,13 +16,44 @@ Vagrant.configure("2") do |config|
   config.vm.define :node1 do |node|
     node.vm.box = "centos7.2"
     node.vm.network :private_network, ip: "192.168.33.11"
+    config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh"
     config.ssh.insert_key = false
+    node.vm.provision "ansible" do |ansible|
+      ansible.groups = {
+        "servers" => ["node1"]
+      }
+
+      ansible.playbook = "provisioning/playbook.yml"
+    end
   end
  
   config.vm.define :node2 do |node|
     node.vm.box = "centos7.2"
     node.vm.network :private_network, ip: "192.168.33.12"
+    config.vm.network "forwarded_port", guest: 22, host: 2223, id: "ssh"
     config.ssh.insert_key = false
+    node.vm.provision "ansible" do |ansible|
+      ansible.groups = {
+        "servers" => ["node2"]
+      }
+
+      ansible.playbook = "provisioning/playbook.yml"
+    end
+  end
+
+  config.vm.define :node3 do |node|
+    node.vm.box = "centos7.2"
+    node.vm.network :public_network, ip: "192.167.33.13"
+    config.vm.network "forwarded_port", guest: 22, host: 2224, id: "ssh"
+    config.ssh.insert_key = false 
+
+    node.vm.provision "ansible" do |ansible|
+      ansible.groups = {
+        "servers" => ["node3"]
+      }
+
+      ansible.playbook = "provisioning/playbook.yml"
+    end
   end
 
   # config.vm.define "target" do |config|
