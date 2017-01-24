@@ -55,11 +55,10 @@
     - shell: echo 'eval "$(rbenv init -)"' >> ~/.zshrc
       sudo: no
 
-    - shell: zsh -lc "rbenv install -v 2.3.1"
+    - shell: source ~/.zshrc
       sudo: no
-    - shell: zsh -lc "rbenv rehash"
+  
+    - shell: /bin/zsh -lc "rbenv install 2.3.1 && rbenv rehash && rbenv global 2.3.1"
       sudo: no
-    - shell: zsh -lc "rbenv global 2.3.1"
-      sudo: no
-    - shell: zsh -lc "gem install bundler"
+    - shell: gem install bundler
       sudo: no
