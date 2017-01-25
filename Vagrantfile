@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
         "servers" => ["node1"]
       }
 
-      ansible.playbook = "provisioning/playbook.yml"
+      ansible.playbook = "common-roles/base/defaults/main.yml"
     end
   end
  

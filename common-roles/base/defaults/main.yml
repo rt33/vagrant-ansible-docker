@@ -1,0 +1,22 @@
+---
+# defaults file for hnakamur.anyenv
+anyenv:
+  git_url: https://github.com/riywo/anyenv
+  install_dir: ~/.anyenv
+
+rbenv:
+  version: 2.3.1
+  global_packages:
+    - bundler
+
+ndenv:
+  version: v6.9.4
+  global_packages: []
+
+npm_default_license: MIT
+
+pyenv:
+  version: 3.5.2
+  global_packages:
+    - pip-tools
+    - neovim
